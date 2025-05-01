@@ -10,7 +10,7 @@ export class Room {
             canvas: document.querySelector('#gameCanvas'),
             antialias: true
         });
-        
+
         // Movement states
         this.moveForward = false;
         this.moveBackward = false;
@@ -19,7 +19,7 @@ export class Room {
         this.isJumping = false;
         this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
-        
+
         // Player settings
         this.playerHeight = 1.8;
         this.moveSpeed = 10.0;
@@ -27,26 +27,26 @@ export class Room {
         this.gravity = 20.0;       // Increased for snappier falls
         this.airControl = 0.8;     // Increased air control
         this.minHeight = this.playerHeight;
-        
+
         // Separate velocities for better control
         this.moveVelocity = new THREE.Vector3();
         this.jumpVelocity = new THREE.Vector3();
-        
+
         // Set initial player position
         this.camera.position.set(0, this.playerHeight, 0);
-        
+
         // Add collision properties
         this.walls = []; // Array to store all wall meshes
         this.collisionDistance = 0.5; // Distance to keep from walls
         this.raycaster = new THREE.Raycaster();
         this.moveDirection = new THREE.Vector3();
-        
+
         // Add enemy property
         this.enemy = null;
-        
+
         // Add selected enemy texture property
         this.selectedEnemyTexture = null;
-        
+
         this.setupRoom();
         this.setupLights();
         this.setupControls();
@@ -57,13 +57,13 @@ export class Room {
 
     setupRoom() {
         // Create materials with adjusted properties
-        const floorMaterial = new THREE.MeshStandardMaterial({ 
+        const floorMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff,
             roughness: 0.1,    // More glossy
             metalness: 0.2
         });
 
-        const wallMaterial = new THREE.MeshStandardMaterial({ 
+        const wallMaterial = new THREE.MeshStandardMaterial({
             color: 0xf5f5f5,   // Off-white color
             roughness: 0.8,    // More matte
             metalness: 0.1
@@ -78,10 +78,10 @@ export class Room {
 
         // Create central room
         this.createMainRoom(floorMaterial, wallMaterial);
-        
+
         // Create hallways
         this.createHallways(floorMaterial, wallMaterial);
-        
+
         // Add hallway signs
         this.createHallwaySigns();
     }
@@ -112,9 +112,9 @@ export class Room {
         this.createWallWithOpening(wallMaterial, 'west');
 
         // Add walls to collision array
-        const walls = this.scene.children.filter(child => 
-            child.isMesh && 
-            child !== floor && 
+        const walls = this.scene.children.filter(child =>
+            child.isMesh &&
+            child !== floor &&
             child !== ceiling
         );
         this.walls.push(...walls);
@@ -131,26 +131,26 @@ export class Room {
         const leftSegment = new THREE.Mesh(wallSegmentGeometry, material);
         const rightSegment = new THREE.Mesh(wallSegmentGeometry, material);
 
-        switch(direction) {
+        switch (direction) {
             case 'north':
-                leftSegment.position.set(-(this.roomWidth + openingWidth) / 4, this.roomHeight/2, -this.roomLength/2);
-                rightSegment.position.set((this.roomWidth + openingWidth) / 4, this.roomHeight/2, -this.roomLength/2);
+                leftSegment.position.set(-(this.roomWidth + openingWidth) / 4, this.roomHeight / 2, -this.roomLength / 2);
+                rightSegment.position.set((this.roomWidth + openingWidth) / 4, this.roomHeight / 2, -this.roomLength / 2);
                 break;
             case 'south':
-                leftSegment.position.set(-(this.roomWidth + openingWidth) / 4, this.roomHeight/2, this.roomLength/2);
-                rightSegment.position.set((this.roomWidth + openingWidth) / 4, this.roomHeight/2, this.roomLength/2);
+                leftSegment.position.set(-(this.roomWidth + openingWidth) / 4, this.roomHeight / 2, this.roomLength / 2);
+                rightSegment.position.set((this.roomWidth + openingWidth) / 4, this.roomHeight / 2, this.roomLength / 2);
                 leftSegment.rotation.y = Math.PI;
                 rightSegment.rotation.y = Math.PI;
                 break;
             case 'east':
-                leftSegment.position.set(this.roomWidth/2, this.roomHeight/2, -(this.roomLength + openingWidth) / 4);
-                rightSegment.position.set(this.roomWidth/2, this.roomHeight/2, (this.roomLength + openingWidth) / 4);
+                leftSegment.position.set(this.roomWidth / 2, this.roomHeight / 2, -(this.roomLength + openingWidth) / 4);
+                rightSegment.position.set(this.roomWidth / 2, this.roomHeight / 2, (this.roomLength + openingWidth) / 4);
                 leftSegment.rotation.y = -Math.PI / 2;
                 rightSegment.rotation.y = -Math.PI / 2;
                 break;
             case 'west':
-                leftSegment.position.set(-this.roomWidth/2, this.roomHeight/2, -(this.roomLength + openingWidth) / 4);
-                rightSegment.position.set(-this.roomWidth/2, this.roomHeight/2, (this.roomLength + openingWidth) / 4);
+                leftSegment.position.set(-this.roomWidth / 2, this.roomHeight / 2, -(this.roomLength + openingWidth) / 4);
+                rightSegment.position.set(-this.roomWidth / 2, this.roomHeight / 2, (this.roomLength + openingWidth) / 4);
                 leftSegment.rotation.y = Math.PI / 2;
                 rightSegment.rotation.y = Math.PI / 2;
                 break;
@@ -164,48 +164,48 @@ export class Room {
         // Create base materials for variations
         const materials = {
             standard: {
-                floor: new THREE.MeshStandardMaterial({ 
+                floor: new THREE.MeshStandardMaterial({
                     color: 0xffffff,
                     roughness: 0.1,
                     metalness: 0.2
                 }),
-                wall: new THREE.MeshStandardMaterial({ 
+                wall: new THREE.MeshStandardMaterial({
                     color: 0xf5f5f5,
                     roughness: 0.8,
                     metalness: 0.1
                 })
             },
             industrial: {
-                floor: new THREE.MeshStandardMaterial({ 
+                floor: new THREE.MeshStandardMaterial({
                     color: 0xcccccc,
                     roughness: 0.7,
                     metalness: 0.5
                 }),
-                wall: new THREE.MeshStandardMaterial({ 
+                wall: new THREE.MeshStandardMaterial({
                     color: 0xe0e0e0,
                     roughness: 0.9,
                     metalness: 0.3
                 })
             },
             clinical: {
-                floor: new THREE.MeshStandardMaterial({ 
+                floor: new THREE.MeshStandardMaterial({
                     color: 0xffffff,
                     roughness: 0.05,
                     metalness: 0.8
                 }),
-                wall: new THREE.MeshStandardMaterial({ 
+                wall: new THREE.MeshStandardMaterial({
                     color: 0xffffff,
                     roughness: 0.2,
                     metalness: 0.4
                 })
             },
             abandoned: {
-                floor: new THREE.MeshStandardMaterial({ 
+                floor: new THREE.MeshStandardMaterial({
                     color: 0xe8e8e8,
                     roughness: 0.9,
                     metalness: 0.1
                 }),
-                wall: new THREE.MeshStandardMaterial({ 
+                wall: new THREE.MeshStandardMaterial({
                     color: 0xf0f0f0,
                     roughness: 1.0,
                     metalness: 0.0
@@ -247,42 +247,42 @@ export class Room {
         );
 
         // Position hallway elements based on direction
-        switch(direction) {
+        switch (direction) {
             case 'north':
-                hallwayFloor.position.set(0, 0, -(this.roomLength/2 + length/2));
-                hallwayCeiling.position.set(0, this.roomHeight, -(this.roomLength/2 + length/2));
-                leftWall.position.set(-this.hallwayWidth/2, this.roomHeight/2, -(this.roomLength/2 + length/2));
-                rightWall.position.set(this.hallwayWidth/2, this.roomHeight/2, -(this.roomLength/2 + length/2));
+                hallwayFloor.position.set(0, 0, -(this.roomLength / 2 + length / 2));
+                hallwayCeiling.position.set(0, this.roomHeight, -(this.roomLength / 2 + length / 2));
+                leftWall.position.set(-this.hallwayWidth / 2, this.roomHeight / 2, -(this.roomLength / 2 + length / 2));
+                rightWall.position.set(this.hallwayWidth / 2, this.roomHeight / 2, -(this.roomLength / 2 + length / 2));
                 leftWall.rotation.y = Math.PI / 2;
                 rightWall.rotation.y = -Math.PI / 2;
                 break;
             case 'south':
-                hallwayFloor.position.set(0, 0, this.roomLength/2 + length/2);
-                hallwayCeiling.position.set(0, this.roomHeight, this.roomLength/2 + length/2);
-                leftWall.position.set(-this.hallwayWidth/2, this.roomHeight/2, this.roomLength/2 + length/2);
-                rightWall.position.set(this.hallwayWidth/2, this.roomHeight/2, this.roomLength/2 + length/2);
+                hallwayFloor.position.set(0, 0, this.roomLength / 2 + length / 2);
+                hallwayCeiling.position.set(0, this.roomHeight, this.roomLength / 2 + length / 2);
+                leftWall.position.set(-this.hallwayWidth / 2, this.roomHeight / 2, this.roomLength / 2 + length / 2);
+                rightWall.position.set(this.hallwayWidth / 2, this.roomHeight / 2, this.roomLength / 2 + length / 2);
                 leftWall.rotation.y = Math.PI / 2;
                 rightWall.rotation.y = -Math.PI / 2;
                 break;
             case 'east':
                 hallwayFloor.rotation.z = Math.PI / 2;
                 hallwayCeiling.rotation.z = Math.PI / 2;
-                hallwayFloor.position.set(this.roomWidth/2 + length/2, 0, 0);
-                hallwayCeiling.position.set(this.roomWidth/2 + length/2, this.roomHeight, 0);
-                leftWall.position.set(this.roomWidth/2 + length/2, this.roomHeight/2, -this.hallwayWidth/2);
-                rightWall.position.set(this.roomWidth/2 + length/2, this.roomHeight/2, this.hallwayWidth/2);
+                hallwayFloor.position.set(this.roomWidth / 2 + length / 2, 0, 0);
+                hallwayCeiling.position.set(this.roomWidth / 2 + length / 2, this.roomHeight, 0);
+                leftWall.position.set(this.roomWidth / 2 + length / 2, this.roomHeight / 2, -this.hallwayWidth / 2);
+                rightWall.position.set(this.roomWidth / 2 + length / 2, this.roomHeight / 2, this.hallwayWidth / 2);
                 leftWall.rotation.y = 0;
                 rightWall.rotation.y = Math.PI;
                 break;
             case 'west':
                 hallwayFloor.rotation.z = Math.PI / 2;
                 hallwayCeiling.rotation.z = Math.PI / 2;
-                hallwayFloor.position.set(-(this.roomWidth/2 + length/2), 0, 0);
-                hallwayCeiling.position.set(-(this.roomWidth/2 + length/2), this.roomHeight, 0);
-                
+                hallwayFloor.position.set(-(this.roomWidth / 2 + length / 2), 0, 0);
+                hallwayCeiling.position.set(-(this.roomWidth / 2 + length / 2), this.roomHeight, 0);
+
                 // Fix wall positions and rotations
-                leftWall.position.set(-(this.roomWidth/2 + length/2), this.roomHeight/2, -this.hallwayWidth/2);
-                rightWall.position.set(-(this.roomWidth/2 + length/2), this.roomHeight/2, this.hallwayWidth/2);
+                leftWall.position.set(-(this.roomWidth / 2 + length / 2), this.roomHeight / 2, -this.hallwayWidth / 2);
+                rightWall.position.set(-(this.roomWidth / 2 + length / 2), this.roomHeight / 2, this.hallwayWidth / 2);
                 leftWall.rotation.y = 0;  // Changed from Math.PI / 2
                 rightWall.rotation.y = Math.PI;  // Changed from Math.PI / 2
                 break;
@@ -301,7 +301,7 @@ export class Room {
             const lightSpacing = 7;
             const numLights = Math.floor(length / lightSpacing);
             for (let i = 0; i < numLights; i++) {
-                const lightPosition = -(this.roomWidth/2 + (i + 0.5) * lightSpacing);
+                const lightPosition = -(this.roomWidth / 2 + (i + 0.5) * lightSpacing);
                 this.addAbandonedLight(lightPosition, this.roomHeight, 0);
             }
         }
@@ -309,28 +309,28 @@ export class Room {
 
     createHallwaySigns() {
         const signs = [
-            { 
-                name: 'STANDARD', 
-                position: [0, this.roomHeight - 0.5, -this.roomLength/2 - 0.1], 
+            {
+                name: 'STANDARD',
+                position: [0, this.roomHeight - 0.5, -this.roomLength / 2 - 0.1],
                 rotation: 0,
                 color: 0x2196F3  // Original blue
             },
-            { 
-                name: 'CLINICAL', 
-                position: [this.roomWidth/2 + 0.1, this.roomHeight - 0.5, 0], 
-                rotation: -Math.PI/2,
+            {
+                name: 'CLINICAL',
+                position: [this.roomWidth / 2 + 0.1, this.roomHeight - 0.5, 0],
+                rotation: -Math.PI / 2,
                 color: 0x4CAF50  // Green
             },
-            { 
-                name: 'INDUSTRIAL', 
-                position: [0, this.roomHeight - 0.5, this.roomLength/2 + 0.1], 
+            {
+                name: 'INDUSTRIAL',
+                position: [0, this.roomHeight - 0.5, this.roomLength / 2 + 0.1],
                 rotation: Math.PI,
                 color: 0xFF9800  // Orange
             },
-            { 
-                name: 'ABANDONED', 
-                position: [-this.roomWidth/2 - 0.1, this.roomHeight - 0.5, 0], 
-                rotation: Math.PI/2,
+            {
+                name: 'ABANDONED',
+                position: [-this.roomWidth / 2 - 0.1, this.roomHeight - 0.5, 0],
+                rotation: Math.PI / 2,
                 color: 0x9C27B0  // Purple
             }
         ];
@@ -340,18 +340,18 @@ export class Room {
                 new THREE.PlaneGeometry(2, 0.6),
                 new THREE.MeshStandardMaterial({ color: 0xffffff })
             );
-            
+
             const signBorder = new THREE.Mesh(
                 new THREE.PlaneGeometry(1.8, 0.4),
                 new THREE.MeshStandardMaterial({ color: sign.color })
             );
-            
+
             signBackground.position.set(...sign.position);
             signBorder.position.set(...sign.position);
-            
+
             signBackground.rotation.y = sign.rotation;
             signBorder.rotation.y = sign.rotation;
-            
+
             signBorder.position.z += Math.cos(sign.rotation) * 0.01;
             signBorder.position.x += Math.sin(sign.rotation) * 0.01;
 
@@ -367,26 +367,26 @@ export class Room {
         this.addFluorescentLight(0, this.roomHeight, 0, 1.2);
 
         // Standard hallway (North) - Original warm fluorescent
-        this.addFluorescentLight(0, this.roomHeight, -(this.roomLength/2 + 7/2), 0.9);
-        this.addFluorescentLight(0, this.roomHeight, -(this.roomLength/2 + this.hallwayLength - 7/2), 0.9);
+        this.addFluorescentLight(0, this.roomHeight, -(this.roomLength / 2 + 7 / 2), 0.9);
+        this.addFluorescentLight(0, this.roomHeight, -(this.roomLength / 2 + this.hallwayLength - 7 / 2), 0.9);
 
         // Clinical hallway (East) - Bright, cold lights
-        this.addClinicalLight((this.roomWidth/2 + 7/2), this.roomHeight, 0);
-        this.addClinicalLight((this.roomWidth/2 + this.hallwayLength - 7/2), this.roomHeight, 0);
+        this.addClinicalLight((this.roomWidth / 2 + 7 / 2), this.roomHeight, 0);
+        this.addClinicalLight((this.roomWidth / 2 + this.hallwayLength - 7 / 2), this.roomHeight, 0);
 
         // Industrial hallway (South) - Sodium vapor style
-        this.addIndustrialLight(0, this.roomHeight, (this.roomLength/2 + 7/2));
-        this.addIndustrialLight(0, this.roomHeight, (this.roomLength/2 + this.hallwayLength - 7/2));
+        this.addIndustrialLight(0, this.roomHeight, (this.roomLength / 2 + 7 / 2));
+        this.addIndustrialLight(0, this.roomHeight, (this.roomLength / 2 + this.hallwayLength - 7 / 2));
 
         // Abandoned hallway (West) - Flickering, dim light
-        this.addAbandonedLight(-(this.roomWidth/2 + 7/2), this.roomHeight, 0);
-        this.addAbandonedLight(-(this.roomWidth/2 + this.hallwayLength - 7/2), this.roomHeight, 0);
+        this.addAbandonedLight(-(this.roomWidth / 2 + 7 / 2), this.roomHeight, 0);
+        this.addAbandonedLight(-(this.roomWidth / 2 + this.hallwayLength - 7 / 2), this.roomHeight, 0);
     }
 
     addFluorescentLight(x, y, z, intensity = 1.0) {
         // Create fluorescent fixture with brighter emissive
         const fixtureGeometry = new THREE.BoxGeometry(4, 0.2, 1);
-        const fixtureMaterial = new THREE.MeshStandardMaterial({ 
+        const fixtureMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff,
             emissive: 0xffffff,
             emissiveIntensity: 0.4  // Increased from 0.3
@@ -424,7 +424,7 @@ export class Room {
 
         const fixture = new THREE.Mesh(
             new THREE.BoxGeometry(4, 0.2, 1),
-            new THREE.MeshStandardMaterial({ 
+            new THREE.MeshStandardMaterial({
                 color: 0xffffff,
                 emissive: 0xd4ebf2,
                 emissiveIntensity: 0.6
@@ -441,7 +441,7 @@ export class Room {
 
         const fixture = new THREE.Mesh(
             new THREE.CylinderGeometry(0.3, 0.3, 0.4),
-            new THREE.MeshStandardMaterial({ 
+            new THREE.MeshStandardMaterial({
                 color: 0x808080,
                 emissive: 0xffd700,
                 emissiveIntensity: 0.3
@@ -455,7 +455,7 @@ export class Room {
         const light = new THREE.PointLight(0xe6e6e6, 0.6, 10, 2);
         light.position.set(x, y - 0.3, z);
         this.scene.add(light);
-        
+
         // Add flickering effect
         const intensity = { value: 0.6 };
         const flickerAnimation = () => {
@@ -473,7 +473,7 @@ export class Room {
 
         const fixture = new THREE.Mesh(
             new THREE.BoxGeometry(4, 0.2, 1),
-            new THREE.MeshStandardMaterial({ 
+            new THREE.MeshStandardMaterial({
                 color: 0xcccccc,
                 emissive: 0xe6e6e6,
                 emissiveIntensity: 0.2
@@ -552,56 +552,16 @@ export class Room {
     }
 
     setupEnemySelection() {
-        const enemyOptions = document.querySelectorAll('.enemy-option');
-        const startButton = document.getElementById('start-button');
         const customEnemyInput = document.getElementById('custom-enemy');
-        
-        // Enable start button immediately and select first enemy by default
-        startButton.disabled = false;
-        this.selectedEnemyTexture = enemyOptions[0].querySelector('img').src;
-        enemyOptions[0].classList.add('selected');
-        
-        // Handle pre-made enemy selection
-        enemyOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                // Remove selected class from all options
-                enemyOptions.forEach(opt => opt.classList.remove('selected'));
-                // Add selected class to clicked option
-                option.classList.add('selected');
-                
-                const input = option.querySelector('input');
-                if (input) {
-                    input.click();
-                } else {
-                    const enemyImg = option.querySelector('img');
-                    this.selectedEnemyTexture = enemyImg.src;
-                    startButton.disabled = false;
-                }
-            });
-        });
-        
+
+        // Handle pre-made enemy selection TODO
+
         // Handle custom enemy upload
-        customEnemyInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.selectedEnemyTexture = e.target.result;
-                    // Update the preview image
-                    const previewImg = customEnemyInput.parentElement.querySelector('.upload-preview');
-                    if (previewImg) {
-                        previewImg.src = e.target.result;
-                    }
-                    startButton.disabled = false;
-                    
-                    // Select this option
-                    enemyOptions.forEach(opt => opt.classList.remove('selected'));
-                    customEnemyInput.closest('.enemy-option').classList.add('selected');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
+        const file = customEnemyInput.files[0];
+        if (file) {
+            this.selectedEnemyTexture = window.URL.createObjectURL(file);
+        }
+    };
 
     checkCollision(proposedPosition, moveDirection) {
         // Add diagonal directions for corner checking
@@ -625,12 +585,12 @@ export class Room {
             direction.normalize();
             this.raycaster.set(proposedPosition, direction);
             const intersects = this.raycaster.intersectObjects(this.walls);
-            
+
             if (intersects.length > 0) {
                 const distance = intersects[0].distance;
                 // Increase minimum collision distance for corners
                 const minDistance = direction.equals(moveDirection) ? this.collisionDistance : this.collisionDistance * 1.5;
-                
+
                 if (distance < minDistance && distance < closestDistance) {
                     closestDistance = distance;
                     closestIntersection = intersects[0];
@@ -642,21 +602,21 @@ export class Room {
             // Get the normal of the wall we're colliding with
             const wallNormal = closestIntersection.face.normal.clone();
             wallNormal.applyQuaternion(closestIntersection.object.quaternion);
-            
+
             // If we're moving into the wall (dot product is negative)
             const movingIntoWall = moveDirection.dot(wallNormal) < 0;
-            
+
             if (movingIntoWall) {
                 // Project the movement direction onto the wall plane
                 const wallProjection = new THREE.Vector3();
                 wallProjection.copy(moveDirection);
                 wallProjection.addScaledVector(wallNormal, -moveDirection.dot(wallNormal));
                 wallProjection.normalize();
-                
+
                 // Reduce sliding speed more aggressively near corners
                 const cornerFactor = Math.pow(closestDistance / this.collisionDistance, 2);
                 wallProjection.multiplyScalar(cornerFactor * 0.8); // Further reduce sliding speed
-                
+
                 return { collision: true, slideDirection: wallProjection };
             }
         }
@@ -667,8 +627,8 @@ export class Room {
         console.log('Spawning enemy with texture:', this.selectedEnemyTexture); // Debug log
         const enemyPosition = new THREE.Vector3(0, 1.5, -5);
         this.enemy = new Enemy(
-            this.scene, 
-            enemyPosition, 
+            this.scene,
+            enemyPosition,
             this.walls,
             this.selectedEnemyTexture
         );
@@ -691,14 +651,14 @@ export class Room {
             // Normalize and apply movement
             if (this.moveVelocity.x !== 0 || this.moveVelocity.z !== 0) {
                 this.moveVelocity.normalize();
-                
+
                 // Calculate proposed position
                 const currentPosition = this.camera.position.clone();
                 const moveSpeed = this.moveSpeed * (this.isJumping ? this.airControl : 1.0) * delta;
-                
+
                 // Combined movement direction
                 const moveDirection = new THREE.Vector3();
-                
+
                 // Add forward/backward movement
                 if (this.moveVelocity.z !== 0) {
                     const forwardDirection = new THREE.Vector3(0, 0, this.moveVelocity.z);
@@ -706,7 +666,7 @@ export class Room {
                     forwardDirection.y = 0;
                     moveDirection.add(forwardDirection);
                 }
-                
+
                 // Add left/right movement
                 if (this.moveVelocity.x !== 0) {
                     const rightDirection = new THREE.Vector3(this.moveVelocity.x, 0, 0);
@@ -714,16 +674,16 @@ export class Room {
                     rightDirection.y = 0;
                     moveDirection.add(rightDirection);
                 }
-                
+
                 moveDirection.normalize();
-                
+
                 // Calculate proposed position
                 const proposedPosition = currentPosition.clone();
                 proposedPosition.addScaledVector(moveDirection, moveSpeed);
-                
+
                 // Check collision and get sliding direction if needed
                 const collisionResult = this.checkCollision(proposedPosition, moveDirection);
-                
+
                 if (!collisionResult.collision) {
                     // No collision, move normally
                     this.camera.position.copy(proposedPosition);
@@ -736,7 +696,7 @@ export class Room {
 
             // Handle vertical movement (jumping and gravity)
             this.jumpVelocity.y -= this.gravity * delta;
-            
+
             // Check vertical collision before applying
             const proposedY = this.camera.position.y + this.jumpVelocity.y * delta;
             if (proposedY > this.minHeight) {
@@ -776,7 +736,7 @@ export class Room {
                 this.controls.lock();
             }
         });
-        
+
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         // Initial render
         this.render();

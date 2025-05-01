@@ -193,14 +193,14 @@ export class Enemy {
         const distanceToPlayer = directionToPlayer.length();
         
         // Uncomment this to enable movement when ready
-        /*
+    
         if (distanceToPlayer > this.minDistanceToPlayer) {
             const moveDirection = directionToPlayer.normalize();
             this.mesh.position.add(
                 moveDirection.multiplyScalar(this.moveSpeed * deltaTime)
             );
         }
-        */
+        
         
         // Add debug logs for tracking enemy in scene
         if (Math.random() < 0.01) { // Log occasionally to avoid console spam

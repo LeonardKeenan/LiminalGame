@@ -1,54 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liminal FPS</title>
-  <link rel="stylesheet" href="style.css">
-  <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
-        "three/addons/controls/PointerLockControls.js": "https://unpkg.com/three@0.159.0/examples/jsm/controls/PointerLockControls.js"
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liminal</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      async
+      src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"
+    ></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
+          "three/addons/controls/PointerLockControls.js": "https://unpkg.com/three@0.159.0/examples/jsm/controls/PointerLockControls.js"
+        }
       }
-    }
-  </script>
-</head>
-<body>
-  <div id="start-screen">
-    <h1>LIMINAL</h1>
-    <div id="enemy-select">
+    </script>
+  </head>
+  <body>
+    <div id="start-screen">
+      <h1>LIMINAL</h1>
+      <div id="enemy-select">
         <h2>Choose Your Enemy</h2>
         <div id="enemy-options">
-            <div class="enemy-option">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA7AAAAOwBeShxvQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABASURBVFiF7c4xDQAACAMwwL/nYQKHqWDJNjMzM/svAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYHvBRoWAQH1CkY1AAAAAElFTkSuQmCC" data-enemy="enemy1" class="enemy-img" alt="Enemy 1">
-                <p>Basic Enemy</p>
-            </div>
-            <div class="enemy-option">
-                <label for="custom-enemy" class="upload-label">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QjJENzFDNTE1MTI0MTFFNDk4NkFGMzJFQkQzQjEwRUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QjJENzFDNTI1MTI0MTFFNDk4NkFGMzJFQkQzQjEwRUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpCMkQ3MUM0RjUxMjQxMUU0OTg2QUYzMkVCRDNCMTBFQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCMkQ3MUM1MDUxMjQxMUU0OTg2QUYzMkVCRDNCMTBFQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="enemy-img upload-preview" alt="Upload Preview">
-                    <span>Click to Upload Custom PNG</span>
-                </label>
-                <input type="file" id="custom-enemy" accept="image/png,image/jpeg" class="file-input">
-            </div>
+          <div class="enemy-option">
+            <label for="custom-enemy" class="upload-label">
+              <img
+                src="assets\imageIcon.svg"
+                class="enemy-img upload-preview"
+                alt="Upload Preview"
+              />
+              <span>Click to Upload Custom PNG</span>
+            </label>
+            <input
+              type="file"
+              id="custom-enemy"
+              accept="image/png,image/jpeg"
+              class="file-input"
+            />
+          </div>
         </div>
+      </div>
+      <button id="start-button" type="button">Enter the Void</button>
     </div>
-    <button id="start-button" type="button">Enter the Void</button>
-  </div>
-  <div id="game-container" style="display: none;">
-    <div id="instructions" class="hidden">
-      <p>Move: WASD / Arrow Keys</p>
-      <p>Look: Mouse</p>
-      <p>Click to continue</p>
+    <div id="game-container" style="display: none">
+      <div id="instructions" class="hidden">
+        <p>Move: WASD / Arrow Keys</p>
+        <p>Look: Mouse</p>
+        <p>Click to continue</p>
+      </div>
+      <canvas id="gameCanvas"></canvas>
+      <div id="hud">
+        <div id="player-health">Health: 100</div>
+        <div id="fps-counter">FPS: 0</div>
+      </div>
     </div>
-    <canvas id="gameCanvas"></canvas>
-    <div id="hud">
-      <div id="player-health">Health: 100</div>
-      <div id="fps-counter">FPS: 0</div>
-    </div>
-  </div>
-  <script type="module" src="js/game.js"></script>
-  <script type="module" src="js/textureDebugger.js"></script>
-</body>
+    <script type="module" src="js/game.js"></script>
+    <script type="module" src="js/textureDebugger.js"></script>
+  </body>
 </html>

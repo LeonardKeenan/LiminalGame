@@ -96,15 +96,15 @@ body {
 
 @keyframes glow {
     from {
-        text-shadow: 0 0 5px #fff,
-                     0 0 10px #fff,
+        text-shadow: 0 0 5px #fff5ca,
+                     0 0 10px #ffffe8,
                      0 0 15px #fff,
                      0 0 20px #fff;
     }
     to {
-        text-shadow: 0 0 10px #fff,
+        text-shadow: 0 0 10px #fff5ca,
                      0 0 20px #fff,
-                     0 0 30px #fff,
+                     0 0 30px #ffffe8,
                      0 0 40px #fff;
     }
 }
