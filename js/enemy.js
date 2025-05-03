@@ -38,8 +38,8 @@ export class Enemy {
         }
         
         // Movement properties
-        this.moveSpeed = 2.0;
-        this.minDistanceToPlayer = 3.0;
+        this.moveSpeed = 4.0;
+        this.minDistanceToPlayer = 1.0;
         
         // Health properties (needed for draw method)
         this.health = 100;
